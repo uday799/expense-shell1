@@ -42,7 +42,7 @@ VALIDATE $? "starting nginx
 rm -rf /usr/share/nginx/html/*
 VALIDATE $? "removing existing code"
 
-curl -o /tmp/frontend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip &>>$LOG_FILE_NAME
+curl -o /tmp/frontend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip  &>>$LOG_FILE_NAME
 VALIDATE $? "Downloading Latest code"
 
 cd /usr/share/nginx/html
