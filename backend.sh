@@ -30,24 +30,24 @@ fi
 
 echo "script started executing at : $TIMESTAMP"
 
-dnf module disable nodejs -y
+dnf module disable nodejs -y &>>LOG_FILE_NAME
 VALIDATE $? "disabling default version"
 
-dnf module enable nodejs:20 -y
+dnf module enable nodejs:20 -y &>>LOG_FILE_NAME
 VALIDATE $? "enabling 20 version"
 
-dnf install nodejs -y
+dnf install nodejs -y &>>LOG_FILE_NAME
 VALIDATE $? "installing nodejs"
 
 id expense
 if [ $? -ne 0 ]
 then
-useradd expense
+useradd expense &>>LOG_FILE_NAME
 VALIADTE $? "adding expense user"
 else
 echo " user already created"
 fi
-mkdir -p /app
+mkdir -p /app &>>LOG_FILE_NAME
 VALIDATE $? "directory craeted"
 
 curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
@@ -56,27 +56,27 @@ VALIDATE $? "downloading code"
 cd /app
 rm -rf /app/*
 
-unzip /tmp/backend.zip
+unzip /tmp/backend.zip &>>LOG_FILE_NAME
 VALIDATE $? "Unzipping code"
 
-npm install
+npm install &>>LOG_FILE_NAME
 VALIDATE $? "installing dependencies"
 
 cp /home/ec2-user/expense-shell1/backend.service /etc/systemd/system/backend.service
 
-dnf install mysql -y
+dnf install mysql -y &>>LOG_FILE_NAME
 VALIDATE $? "installing mysql"
 
 mysql -h database.udayops.online -uroot -pExpenseApp@1 < /app/schema/backend.sql &>>$LOG_FILE_NAME
 VALIDATE $? "loading schema"
 
-systemctl daemon-reload
+systemctl daemon-reload &>>LOG_FILE_NAME
 VALIDATE $? "reloading"
 
-systemctl enable backend
+systemctl enable backend &>>LOG_FILE_NAME
 VALIDATE $? "enabling backend"
 
-systemctl restart backend
+systemctl restart backend &>>LOG_FILE_NAME
 VALIADTE $? "restart backend"
 
 
